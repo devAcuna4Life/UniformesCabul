@@ -163,8 +163,7 @@ public class Ninos extends javax.swing.JFrame {
 
     private void btnProds1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProds1ActionPerformed
         // TODO add your handling code here:
-         InvenatarioNino home = new InvenatarioNino();
-          home.setVisible(true);
+        
     }//GEN-LAST:event_btnProds1ActionPerformed
 
     /**
