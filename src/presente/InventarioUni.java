@@ -13,24 +13,35 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 
-public class Pedidos extends javax.swing.JFrame {
+/**
+ *
+ * @author 22PROGB14
+ */
+public class InventarioUni extends javax.swing.JFrame {
 
     ConexionMys con = new ConexionMys();
     Connection cn = con.conectar();
 
-    public Pedidos() {
+    /**
+     * Creates new form InventarioUni
+     */
+    public InventarioUni() {
         initComponents();
     }
 
-    private void mostrarPedidos() {
+    private void mostrarDatos() {
         DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("NoPedido");
-        modelo.addColumn("ModeloUniforme");
-        modelo.addColumn("NoUniformes");
+        modelo.addColumn("Equipo");
+        modelo.addColumn("Modelo");
+        modelo.addColumn("Color");
+        modelo.addColumn("Tallas");
+        modelo.addColumn("Existencia");
         modelo.addColumn("Precio");
         jTable1.setModel(modelo);
-        String consultaSql = "SELECT * FROM pedidos";
-        String data[] = new String[4];
+
+        // Cambios en la consulta SQL
+        String consultaSql = "SELECT * FROM inventariouniformes";
+        String data[] = new String[6]; // Ahora hay 6 columnas
 
         Statement st;
 
@@ -39,18 +50,19 @@ public class Pedidos extends javax.swing.JFrame {
             ResultSet rs = st.executeQuery(consultaSql);
 
             while (rs.next()) {
-                data[0] = rs.getString(1);
-                data[1] = rs.getString(2);
-                data[2] = rs.getString(3);
-                data[3] = rs.getString(4);
+                // Cambios en la obtención de datos según las variables proporcionadas
+                data[0] = rs.getString("Equipo");
+                data[1] = rs.getString("Modelo");
+                data[2] = rs.getString("Color");
+                data[3] = rs.getString("Tallas");
+                data[4] = rs.getString("Existencia");
+                data[5] = rs.getString("Precio");
                 modelo.addRow(data);
             }
         } catch (SQLException e) {
             System.out.println("Error: " + e);
         }
     }
-
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -70,14 +82,18 @@ public class Pedidos extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        txtNoPedido = new javax.swing.JTextField();
-        txtModeloUniforme = new javax.swing.JTextField();
-        txtNoUniformes = new javax.swing.JTextField();
+        txtEquipo = new javax.swing.JTextField();
+        txtModelo = new javax.swing.JTextField();
+        txtColor = new javax.swing.JTextField();
         txtPrecio = new javax.swing.JTextField();
         btnRegistrar = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
         btnMostrar = new javax.swing.JButton();
         btnCompletado = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        txtExistencia = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        txtTallas = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
@@ -129,11 +145,11 @@ public class Pedidos extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(0, 153, 153));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI Black", 3, 14)); // NOI18N
-        jLabel1.setText("NoPedido");
+        jLabel1.setText("Equipo");
 
         jLabel2.setText("Modelo");
 
-        jLabel3.setText("NoUniformes");
+        jLabel3.setText("Color");
 
         jLabel4.setText("Precio");
 
@@ -171,27 +187,22 @@ public class Pedidos extends javax.swing.JFrame {
             }
         });
 
+        jLabel5.setText("Existencia");
+
+        txtExistencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtExistenciaActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("Tallas");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel1))
-                                .addComponent(jLabel3))
-                            .addComponent(jLabel4))
-                        .addGap(28, 28, 28)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtNoUniformes, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtModeloUniforme, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addComponent(btnRegistrar)
@@ -200,35 +211,73 @@ public class Pedidos extends javax.swing.JFrame {
                         .addGap(41, 41, 41)
                         .addComponent(btnMostrar)
                         .addGap(18, 18, 18)
-                        .addComponent(btnCompletado)))
+                        .addComponent(btnCompletado))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3))))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtColor, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel5))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtExistencia, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addComponent(txtTallas, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(51, 51, 51)
+                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txtNoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(txtModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtModeloUniforme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(txtNoUniformes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(54, 54, 54)
+                    .addComponent(jLabel7)
+                    .addComponent(txtTallas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtExistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(36, 36, 36)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegistrar)
                     .addComponent(btnActualizar)
                     .addComponent(btnMostrar)
                     .addComponent(btnCompletado))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 3, 24)); // NOI18N
@@ -280,58 +329,62 @@ public class Pedidos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        int fila = jTable1.getSelectedRow();
+        this.txtEquipo.setText(jTable1.getValueAt(fila, 0).toString()); // Usando la columna correspondiente a "Equipo"
+        this.txtModelo.setText(jTable1.getValueAt(fila, 1).toString()); // Usando la columna correspondiente a "Modelo"
+        this.txtColor.setText(jTable1.getValueAt(fila, 2).toString());  // Usando la columna correspondiente a "Color"
+        this.txtTallas.setText(jTable1.getValueAt(fila, 3).toString()); // Usando la columna correspondiente a "Tallas"
+        this.txtExistencia.setText(jTable1.getValueAt(fila, 4).toString()); // Usando la columna correspondiente a "Existencia"
+        this.txtPrecio.setText(jTable1.getValueAt(fila, 5).toString());
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jTable1ComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jTable1ComponentHidden
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTable1ComponentHidden
+
     private void txtPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPrecioActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         // TODO add your handling code here:
         try {
-           PreparedStatement ps = cn.prepareStatement("INSERT INTO pedidos (ModeloUniforme, NoUniformes, Precio) VALUES (?,?,?)");
-            ps.setString(1, txtModeloUniforme.getText());
-            ps.setInt(2, Integer.parseInt(txtNoUniformes.getText()));
-            ps.setDouble(3, Double.parseDouble(txtPrecio.getText()));
+            PreparedStatement ps = cn.prepareStatement("INSERT INTO inventariouniformes (Equipo, Modelo, Color, Tallas, Existencia, Precio) VALUES (?,?,?,?,?,?)");
+            ps.setString(1, txtEquipo.getText());
+            ps.setString(2, txtModelo.getText());
+            ps.setString(3, txtColor.getText());
+            ps.setString(4, txtTallas.getText());
+            ps.setInt(5, Integer.parseInt(txtExistencia.getText()));
+            ps.setDouble(6, Double.parseDouble(txtPrecio.getText()));
             ps.executeUpdate();
 
             JOptionPane.showMessageDialog(rootPane, "Datos guardados correctamente");
-            mostrarPedidos();
+            mostrarDatos();
 
             // Limpiar los campos después de la inserción
-            txtModeloUniforme.setText("");
-            txtNoUniformes.setText("");
+            txtEquipo.setText("");
+            txtModelo.setText("");
+            txtColor.setText("");
+            txtTallas.setText("");
+            txtExistencia.setText("");
             txtPrecio.setText("");
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(rootPane, "Error al registrar pedido" + e);
         }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
-    private void btnMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarActionPerformed
-        // TODO add your handling code here:
-        mostrarPedidos();
-    }//GEN-LAST:event_btnMostrarActionPerformed
-
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here:
-        int fila = jTable1.getSelectedRow();
-        this.txtNoPedido.setText(jTable1.getValueAt(fila, 0).toString());
-        this.txtModeloUniforme.setText(jTable1.getValueAt(fila, 1).toString());
-        this.txtNoUniformes.setText(jTable1.getValueAt(fila, 2).toString());
-        this.txtPrecio.setText(jTable1.getValueAt(fila, 3).toString());
-    }//GEN-LAST:event_jTable1MouseClicked
-
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         // TODO add your handling code here:
         try {
-            PreparedStatement ps = cn.prepareStatement("UPDATE pedidos SET ModeloUniforme=?, NoUniformes=?, Precio=? WHERE NoPedido=?");
-            ps.setString(1, txtModeloUniforme.getText());
-            ps.setInt(2, Integer.parseInt(txtNoUniformes.getText()));
-            ps.setDouble(3, Double.parseDouble(txtPrecio.getText()));
-            ps.setInt(4, Integer.parseInt(txtNoPedido.getText()));
+            PreparedStatement ps = cn.prepareStatement("UPDATE inventariouniformes SET Equipo=?, Modelo=?, Color=?, Tallas=?, Existencia=?, Precio=? WHERE NoPedido=?");
+            ps.setString(1, txtEquipo.getText());
+            ps.setString(2, txtModelo.getText());
+            ps.setString(3, txtColor.getText());
+            ps.setString(4, txtTallas.getText());
+            ps.setInt(5, Integer.parseInt(txtExistencia.getText()));
+            ps.setDouble(6, Double.parseDouble(txtPrecio.getText()));
 
             int indice = ps.executeUpdate();
 
@@ -345,12 +398,33 @@ public class Pedidos extends javax.swing.JFrame {
         }
 
 // Limpiar los campos después de la actualización
-        txtNoPedido.setText("");
-        txtModeloUniforme.setText("");
-        txtNoUniformes.setText("");
+        txtEquipo.setText("");
+        txtModelo.setText("");
+        txtColor.setText("");
+        txtTallas.setText("");
+        txtExistencia.setText("");
         txtPrecio.setText("");
-        mostrarPedidos();
+        mostrarDatos();
     }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarActionPerformed
+        // TODO add your handling code here:
+        mostrarDatos();
+    }//GEN-LAST:event_btnMostrarActionPerformed
+
+    private void btnCompletadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompletadoActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_btnCompletadoActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void txtExistenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtExistenciaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtExistenciaActionPerformed
 
     private void jPopupMenu1AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jPopupMenu1AncestorAdded
         // TODO add your handling code here:
@@ -358,35 +432,7 @@ public class Pedidos extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-        try {
-            PreparedStatement ps = cn.prepareStatement("DELETE FROM pedidos WHERE NoPedido=?");
-            ps.setInt(1, Integer.parseInt(txtNoPedido.getText()));
-            int indice = ps.executeUpdate();
-
-            if (indice > 0) {
-                mostrarPedidos();
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "No se seleccionó una fila");
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(rootPane, "Error al eliminar datos: " + e);
-        }
-
-// Limpiar los campos después de la eliminación
-        txtNoPedido.setText("");
-        txtModeloUniforme.setText("");
-        txtNoUniformes.setText("");
-        txtPrecio.setText("");
     }//GEN-LAST:event_jMenuItem1ActionPerformed
-
-    private void jTable1ComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jTable1ComponentHidden
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTable1ComponentHidden
-
-    private void btnCompletadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompletadoActionPerformed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_btnCompletadoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -405,20 +451,20 @@ public class Pedidos extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Pedidos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InventarioUni.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Pedidos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InventarioUni.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Pedidos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InventarioUni.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Pedidos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InventarioUni.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Pedidos().setVisible(true);
+                new InventarioUni().setVisible(true);
             }
         });
     }
@@ -433,15 +479,19 @@ public class Pedidos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField txtModeloUniforme;
-    private javax.swing.JTextField txtNoPedido;
-    private javax.swing.JTextField txtNoUniformes;
+    private javax.swing.JTextField txtColor;
+    private javax.swing.JTextField txtEquipo;
+    private javax.swing.JTextField txtExistencia;
+    private javax.swing.JTextField txtModelo;
     private javax.swing.JTextField txtPrecio;
+    private javax.swing.JTextField txtTallas;
     // End of variables declaration//GEN-END:variables
 }
