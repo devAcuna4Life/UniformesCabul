@@ -4,6 +4,7 @@
  */
 package presente;
 //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
+
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -436,6 +437,29 @@ public class InventarioUni extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
+        try {
+            PreparedStatement ps = cn.prepareStatement("DELETE FROM inventariouniforme WHERE Equipo=?");
+            ps.setString(1, txtEquipo.getText());
+            int indice = ps.executeUpdate();
+
+            if (indice > 0) {
+                mostrarDatos();
+                JOptionPane.showMessageDialog(rootPane, "Datos eliminados correctamente");
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "No se seleccionó una fila");
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(rootPane, "Error al eliminar datos: " + e);
+        }
+
+// Limpiar los campos después de la eliminación
+        txtEquipo.setText("");
+        txtModelo.setText("");
+        txtColor.setText("");
+        txtTallas.setText("");
+        txtExistencia.setText("");
+        txtPrecio.setText("");
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**

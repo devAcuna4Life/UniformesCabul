@@ -334,16 +334,15 @@ public class InventarioM extends javax.swing.JFrame {
             int indice = ps.executeUpdate();
 
             if (indice > 0) {
-                // mostrarDatos();
-                JOptionPane.showMessageDialog(rootPane, "Registro eliminado exitosamente.");
+                mostrarDatos();
             } else {
-                JOptionPane.showMessageDialog(rootPane, "No se encontró un registro con el NoUniforme especificado.");
+                JOptionPane.showMessageDialog(rootPane, "No se seleccionó una fila");
             }
+
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(rootPane, "Error al eliminar datos: " + e);
         }
 
-// Limpiar los campos después de la eliminación
         txtNoUniforme.setText("");
         txtEquipo.setText("");
         txtJersey.setText("");
