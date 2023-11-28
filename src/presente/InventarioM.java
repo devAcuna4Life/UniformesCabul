@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package presente;
 
 import java.sql.Statement;
@@ -51,6 +48,7 @@ public class InventarioM extends javax.swing.JFrame {
             System.out.println("Error" + e);
         }
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -325,13 +323,14 @@ public class InventarioM extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
+        
         try {
             PreparedStatement ps = cn.prepareStatement("DELETE FROM pedidos WHERE equipo=?");
             ps.setString(1, txtEquipo.getText());
             int indice = ps.executeUpdate();
 
             if (indice > 0) {
-                mostrarDatos();
+                   // mostrarDatos();
             } else {
                 JOptionPane.showMessageDialog(rootPane, "No se seleccionó una fila");
             }
@@ -345,6 +344,7 @@ public class InventarioM extends javax.swing.JFrame {
         txtAccesorios.setText("");
         txtExistencia.setText("");
         txtPrecio.setText("");
+        
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
@@ -354,23 +354,26 @@ public class InventarioM extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
+        
         int fila = jTable1.getSelectedRow();
         this.txtEquipo.setText(jTable1.getValueAt(fila, 0).toString());
         this.txtJersey.setText(jTable1.getValueAt(fila, 1).toString());
         this.txtAccesorios.setText(jTable1.getValueAt(fila, 2).toString());
         this.txtExistencia.setText(jTable1.getValueAt(fila, 3).toString());
         this.txtPrecio.setText(jTable1.getValueAt(fila, 4).toString());
+        
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void btnMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarActionPerformed
         // TODO add your handling code here:
-        mostrarDatos();
+         mostrarDatos();
     }//GEN-LAST:event_btnMostrarActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         // TODO add your handling code here:
+        
         try {
-            PreparedStatement ps = cn.prepareStatement("UPDATE pedidos SET equipo=?, jersey=?, accesorios=?, existencia=?, precio=? WHERE NoPedido=?");
+             PreparedStatement ps = cn.prepareStatement("UPDATE pedidos SET equipo=?, jersey=?, accesorios=?, existencia=?, precio=? WHERE NoPedido=?");
             ps.setString(1, txtEquipo.getText());
             ps.setString(2, txtJersey.getText());
             ps.setString(3, txtAccesorios.getText());
@@ -395,10 +398,12 @@ public class InventarioM extends javax.swing.JFrame {
         txtExistencia.setText("");
         txtPrecio.setText("");
         mostrarDatos();
+              
     }//GEN-LAST:event_btnActualizarActionPerformed
-
+ 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        // TODO add your handling code here:
+      
+        
         try {
             PreparedStatement ps = cn.prepareStatement("INSERT INTO pedidos (equipo, jersey, accesorios, existencia, precio) VALUES (?,?,?,?,?)");
             ps.setString(1, txtEquipo.getText());
@@ -429,8 +434,10 @@ public class InventarioM extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         this.dispose();
+           
+      
     }//GEN-LAST:event_jButton1ActionPerformed
-
+ 
     /**
      * @param args the command line arguments
      */
