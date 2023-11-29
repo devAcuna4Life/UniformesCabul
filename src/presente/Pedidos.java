@@ -23,59 +23,64 @@ public class Pedidos extends javax.swing.JFrame {
     }
 
     private void mostrarPedidos() {
-        DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("NoPedido");
-        modelo.addColumn("ModeloUniforme");
-        modelo.addColumn("NoUniformes");
-        modelo.addColumn("Precio");
-        jTable1.setModel(modelo);
-        String consultaSql = "SELECT * FROM pedidos";
-        String data[] = new String[4];
+    DefaultTableModel modelo = new DefaultTableModel();
+    modelo.addColumn("NoPedido");
+    modelo.addColumn("Uniformes");  // Nueva columna de tipo VARCHAR, ahora después de "NoPedido"
+    modelo.addColumn("ModeloUniforme");
+    modelo.addColumn("NoUniformes");
+    modelo.addColumn("Precio");
+    jTable1.setModel(modelo);
 
-        Statement st;
+    String consultaSql = "SELECT * FROM pedidos";
+    String data[] = new String[5];  // Ajustar el tamaño del array al número de columnas
 
-        try {
-            st = cn.createStatement();
-            ResultSet rs = st.executeQuery(consultaSql);
+    Statement st;
 
-            while (rs.next()) {
-                data[0] = rs.getString(1);
-                data[1] = rs.getString(2);
-                data[2] = rs.getString(3);
-                data[3] = rs.getString(4);
-                modelo.addRow(data);
-            }
-        } catch (SQLException e) {
-            System.out.println("Error: " + e);
+    try {
+        st = cn.createStatement();
+        ResultSet rs = st.executeQuery(consultaSql);
+
+        while (rs.next()) {
+            data[0] = rs.getString(1);
+            data[1] = rs.getString("Uniformes");  // Ajustar al nombre real de la columna en la base de datos
+            data[2] = rs.getString(2);
+            data[3] = rs.getString(3);
+            data[4] = rs.getString(4);
+            modelo.addRow(data);
         }
+    } catch (SQLException e) {
+        System.out.println("Error: " + e);
+    }
+}
+
+   public DefaultTableModel obtenerDatosPedidos() {
+    DefaultTableModel modelo = new DefaultTableModel();
+    modelo.addColumn("NoPedido");
+    modelo.addColumn("Uniformes");  // Nueva columna de tipo VARCHAR
+    modelo.addColumn("ModeloUniforme");
+    modelo.addColumn("NoUniformes");
+    modelo.addColumn("Precio");
+
+    try {
+        Statement st = cn.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM pedidos");
+
+        while (rs.next()) {
+            Object[] data = {
+                rs.getString(1),
+                rs.getString("Uniformes"),  // Ajustar al nombre real de la columna en la base de datos
+                rs.getString(2),
+                rs.getString(3),
+                rs.getString(4)
+            };
+            modelo.addRow(data);
+        }
+    } catch (SQLException e) {
+        System.out.println("Error al obtener datos de pedidos: " + e);
     }
 
-    public DefaultTableModel obtenerDatosPedidos() {
-        DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("NoPedido");
-        modelo.addColumn("ModeloUniforme");
-        modelo.addColumn("NoUniformes");
-        modelo.addColumn("Precio");
-
-        try {
-            Statement st = cn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM pedidos");
-
-            while (rs.next()) {
-                Object[] data = {
-                    rs.getString(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4)
-                };
-                modelo.addRow(data);
-            }
-        } catch (SQLException e) {
-            System.out.println("Error al obtener datos de pedidos: " + e);
-        }
-
-        return modelo;
-    }
+    return modelo;
+}
 
     public void completarPedido(int noPedido) {
     try {
@@ -92,6 +97,7 @@ public class Pedidos extends javax.swing.JFrame {
         System.out.println("Error al completar el pedido: " + e);
     }
 }
+    
     private int obtenerNoPedidoSeleccionado() {
     int filaSeleccionada = jTable1.getSelectedRow();
     if (filaSeleccionada != -1) {
@@ -127,6 +133,8 @@ public class Pedidos extends javax.swing.JFrame {
         btnActualizar = new javax.swing.JButton();
         btnMostrar = new javax.swing.JButton();
         btnCompletado = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        txtEquipo = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
@@ -220,27 +228,14 @@ public class Pedidos extends javax.swing.JFrame {
             }
         });
 
+        jLabel5.setText("Equipo");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel1))
-                                .addComponent(jLabel3))
-                            .addComponent(jLabel4))
-                        .addGap(28, 28, 28)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtNoUniformes, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtModeloUniforme, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addComponent(btnRegistrar)
@@ -249,17 +244,45 @@ public class Pedidos extends javax.swing.JFrame {
                         .addGap(41, 41, 41)
                         .addComponent(btnMostrar)
                         .addGap(18, 18, 18)
-                        .addComponent(btnCompletado)))
+                        .addComponent(btnCompletado))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGap(30, 30, 30)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel5)
+                                            .addComponent(jLabel2))))
+                                .addComponent(jLabel4))
+                            .addComponent(jLabel1))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(28, 28, 28)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtNoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNoUniformes, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtModeloUniforme, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(txtEquipo)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(51, 51, 51)
+                .addGap(28, 28, 28)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtNoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(10, 10, 10)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtModeloUniforme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -340,23 +363,25 @@ public class Pedidos extends javax.swing.JFrame {
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         // TODO add your handling code here:
-        try {
-            PreparedStatement ps = cn.prepareStatement("INSERT INTO pedidos (ModeloUniforme, NoUniformes, Precio) VALUES (?,?,?)");
-            ps.setString(1, txtModeloUniforme.getText());
-            ps.setInt(2, Integer.parseInt(txtNoUniformes.getText()));
-            ps.setDouble(3, Double.parseDouble(txtPrecio.getText()));
-            ps.executeUpdate();
+      try {
+    PreparedStatement ps = cn.prepareStatement("INSERT INTO pedidos (ModeloUniforme, Equipo, NoUniformes, Precio) VALUES (?,?,?,?)");
+    ps.setString(1, txtModeloUniforme.getText());
+    ps.setString(2, txtEquipo.getText());  // Agregado
+    ps.setInt(3, Integer.parseInt(txtNoUniformes.getText()));
+    ps.setDouble(4, Double.parseDouble(txtPrecio.getText()));
+    ps.executeUpdate();
 
-            JOptionPane.showMessageDialog(rootPane, "Datos guardados correctamente");
-            mostrarPedidos();
+    JOptionPane.showMessageDialog(rootPane, "Datos guardados correctamente");
+    mostrarPedidos();
 
-            // Limpiar los campos después de la inserción
-            txtModeloUniforme.setText("");
-            txtNoUniformes.setText("");
-            txtPrecio.setText("");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(rootPane, "Error al registrar pedido" + e);
-        }
+    // Limpiar los campos después de la inserción
+    txtModeloUniforme.setText("");
+    txtEquipo.setText("");  // Agregado
+    txtNoUniformes.setText("");
+    txtPrecio.setText("");
+} catch (SQLException e) {
+    JOptionPane.showMessageDialog(rootPane, "Error al registrar pedido" + e);
+}
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void btnMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarActionPerformed
@@ -490,12 +515,14 @@ public class Pedidos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextField txtEquipo;
     private javax.swing.JTextField txtModeloUniforme;
     private javax.swing.JTextField txtNoPedido;
     private javax.swing.JTextField txtNoUniformes;
