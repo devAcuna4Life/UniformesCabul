@@ -30,7 +30,7 @@ public class Login extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         btnSalir = new javax.swing.JButton();
-        btnAcceder = new javax.swing.JButton();
+        btnIniciarSesion = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -40,7 +40,6 @@ public class Login extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jButton_IniciarSesion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -57,13 +56,13 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        btnAcceder.setBackground(new java.awt.Color(0, 102, 255));
-        btnAcceder.setFont(new java.awt.Font("Segoe UI Light", 3, 18)); // NOI18N
-        btnAcceder.setForeground(new java.awt.Color(255, 255, 255));
-        btnAcceder.setText("Iniciar Sesión");
-        btnAcceder.addActionListener(new java.awt.event.ActionListener() {
+        btnIniciarSesion.setBackground(new java.awt.Color(0, 102, 255));
+        btnIniciarSesion.setFont(new java.awt.Font("Segoe UI Light", 3, 18)); // NOI18N
+        btnIniciarSesion.setForeground(new java.awt.Color(255, 255, 255));
+        btnIniciarSesion.setText("Iniciar Sesión");
+        btnIniciarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAccederActionPerformed(evt);
+                btnIniciarSesionActionPerformed(evt);
             }
         });
 
@@ -125,16 +124,6 @@ public class Login extends javax.swing.JFrame {
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("Sport Thai Chilpo");
 
-        jButton_IniciarSesion.setBackground(new java.awt.Color(51, 153, 255));
-        jButton_IniciarSesion.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton_IniciarSesion.setForeground(new java.awt.Color(255, 255, 255));
-        jButton_IniciarSesion.setText("Iniciar Sesión");
-        jButton_IniciarSesion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_IniciarSesionActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -161,7 +150,7 @@ public class Login extends javax.swing.JFrame {
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(56, 56, 56)
-                                        .addComponent(btnAcceder, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(btnIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -170,11 +159,6 @@ public class Login extends javax.swing.JFrame {
                         .addGap(155, 155, 155)
                         .addComponent(jLabel4)
                         .addGap(0, 0, Short.MAX_VALUE))))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(1066, 1066, 1066)
-                    .addComponent(jButton_IniciarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGap(1067, 1067, 1067)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -194,18 +178,13 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAcceder)
+                    .addComponent(btnIniciarSesion)
                     .addComponent(btnSalir))
                 .addGap(133, 133, 133))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(269, 269, 269)
-                    .addComponent(jButton_IniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(207, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -230,7 +209,7 @@ public class Login extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnSalirActionPerformed
 
-    private void btnAccederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccederActionPerformed
+    private void btnIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSesionActionPerformed
         // TODO add your handling code here:
             // TODO add your handling code here:
             String Usuario="Administrador";
@@ -239,7 +218,8 @@ public class Login extends javax.swing.JFrame {
         String passw = new String(jPasswordField1.getPassword());
         
 if (jTextField1.getText().equals (Usuario) && passw.equals (Contraseña)) {            
-           
+            Menu home = new Menu();
+           home.setVisible(true);
 
             
         }else{
@@ -248,7 +228,7 @@ if (jTextField1.getText().equals (Usuario) && passw.equals (Contraseña)) {
         }
         
         
-    }//GEN-LAST:event_btnAccederActionPerformed
+    }//GEN-LAST:event_btnIniciarSesionActionPerformed
 
     private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
 
@@ -258,10 +238,6 @@ if (jTextField1.getText().equals (Usuario) && passw.equals (Contraseña)) {
         //METODO U ACCION PARA QUE AL DAR ENTER INICIE SESION
 
     }//GEN-LAST:event_jPasswordField1KeyPressed
-
-    private void jButton_IniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_IniciarSesionActionPerformed
-
-    }//GEN-LAST:event_jButton_IniciarSesionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -300,9 +276,8 @@ if (jTextField1.getText().equals (Usuario) && passw.equals (Contraseña)) {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAcceder;
+    private javax.swing.JButton btnIniciarSesion;
     private javax.swing.JButton btnSalir;
-    private javax.swing.JButton jButton_IniciarSesion;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
