@@ -50,8 +50,57 @@ public class Pedidos extends javax.swing.JFrame {
         }
     }
 
+    public DefaultTableModel obtenerDatosPedidos() {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("NoPedido");
+        modelo.addColumn("ModeloUniforme");
+        modelo.addColumn("NoUniformes");
+        modelo.addColumn("Precio");
 
+        try {
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM pedidos");
 
+            while (rs.next()) {
+                Object[] data = {
+                    rs.getString(1),
+                    rs.getString(2),
+                    rs.getString(3),
+                    rs.getString(4)
+                };
+                modelo.addRow(data);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener datos de pedidos: " + e);
+        }
+
+        return modelo;
+    }
+
+    public void completarPedido(int noPedido) {
+    try {
+        PreparedStatement ps = cn.prepareStatement("UPDATE pedidos SET Total = NoUniformes * Precio, Completado = 1 WHERE NoPedido=?");
+        ps.setInt(1, noPedido);
+        int indice = ps.executeUpdate();
+
+        if (indice > 0) {
+            System.out.println("Pedido completado con éxito");
+        } else {
+            System.out.println("No se encontró un pedido con ese número");
+        }
+    } catch (SQLException e) {
+        System.out.println("Error al completar el pedido: " + e);
+    }
+}
+    private int obtenerNoPedidoSeleccionado() {
+    int filaSeleccionada = jTable1.getSelectedRow();
+    if (filaSeleccionada != -1) {
+        return Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 0).toString());
+    } else {
+        return -1;
+    }
+}
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -292,7 +341,7 @@ public class Pedidos extends javax.swing.JFrame {
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         // TODO add your handling code here:
         try {
-           PreparedStatement ps = cn.prepareStatement("INSERT INTO pedidos (ModeloUniforme, NoUniformes, Precio) VALUES (?,?,?)");
+            PreparedStatement ps = cn.prepareStatement("INSERT INTO pedidos (ModeloUniforme, NoUniformes, Precio) VALUES (?,?,?)");
             ps.setString(1, txtModeloUniforme.getText());
             ps.setInt(2, Integer.parseInt(txtNoUniformes.getText()));
             ps.setDouble(3, Double.parseDouble(txtPrecio.getText()));
@@ -385,7 +434,15 @@ public class Pedidos extends javax.swing.JFrame {
 
     private void btnCompletadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompletadoActionPerformed
         // TODO add your handling code here:
-        
+        int noPedidoSeleccionado = obtenerNoPedidoSeleccionado();
+
+    // Completar el pedido en la clase Pedidos
+    if (noPedidoSeleccionado != -1) {
+        completarPedido(noPedidoSeleccionado);
+    } else {
+        JOptionPane.showMessageDialog(rootPane, "Seleccione un pedido antes de completar");
+    }
+
     }//GEN-LAST:event_btnCompletadoActionPerformed
 
     /**

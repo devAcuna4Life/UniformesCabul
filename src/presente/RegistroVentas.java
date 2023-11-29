@@ -4,17 +4,88 @@
  */
 package presente;
 
-/**
- *
- * @author 22PROGB14
- */
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+ 
 public class RegistroVentas extends javax.swing.JFrame {
 
-    /**
-     * Creates new form RegistroVentas
-     */
+   int noPedido = obtenerNoPedidoDesdeOtraClase(); // Reemplaza esto con tu lógica para obtener el número de pedido
+int cantidadUniformes = obtenerCantidadUniformesDesdeOtraClase();
+
+    ConexionMys con = new ConexionMys();
+    Connection cn = con.conectar();
+    
+     DefaultTableModel modeloTabla;
+    
     public RegistroVentas() {
         initComponents();
+        modeloTabla = (DefaultTableModel) jTable1.getModel();
+    }
+    private void cargarVentas() {
+        // Limpiar el contenido de la tabla
+        modeloTabla.setRowCount(0);
+
+        // Consulta SQL para obtener las ventas
+        String consulta = "SELECT NoVenta, NoPedido, Fecha, Total FROM Ventas";
+
+        try {
+            // Crear una declaración SQL
+            Statement st = cn.createStatement();
+
+            // Ejecutar la consulta y obtener el resultado
+            ResultSet rs = st.executeQuery(consulta);
+
+            // Iterar sobre el resultado y agregar filas a la tabla
+            while (rs.next()) {
+                Object[] fila = {
+                    rs.getString("NoVenta"),
+                    rs.getString("NoPedido"),
+                    rs.getString("Fecha"),
+                    rs.getString("Total")
+                };
+                modeloTabla.addRow(fila);
+            }
+
+            // Cerrar recursos
+            rs.close();
+            st.close();
+
+        } catch (SQLException e) {
+            // Manejar cualquier error de SQL
+            JOptionPane.showMessageDialog(this, "Error al cargar las ventas: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void registrarVenta(int noPedido, int cantidadUniformes) {
+        try {
+            // Obtener el precio del uniforme desde la base de datos
+            double precioUnitario = obtenerPrecioUnitario(noPedido);
+
+            // Calcular el total
+            double total = precioUnitario * cantidadUniformes;
+
+            // Insertar la venta en la base de datos
+            PreparedStatement ps = cn.prepareStatement("INSERT INTO ventas (NoPedido, Fecha, Total) VALUES (?, NOW(), ?)");
+            ps.setInt(1, noPedido);
+            ps.setDouble(2, total);
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(rootPane, "Venta registrada correctamente");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(rootPane, "Error al registrar venta: " + e);
+        }
+    }
+    
+    private double obtenerPrecioUnitario(int noPedido) throws SQLException {
+        // Aquí deberías realizar una consulta a la base de datos
+        // para obtener el precio unitario del uniforme asociado al pedido.
+        // Por ahora, devolveré un valor constante para demostración.
+        return 50.0;  // Este valor debe ser reemplazado con la consulta real.
     }
 
     /**
@@ -26,21 +97,140 @@ public class RegistroVentas extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTableVentas = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        btnCargarVentas = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jTableVentas.setViewportView(jTable1);
+
+        btnCargarVentas.setText("Mostrar Ventas");
+        btnCargarVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCargarVentasActionPerformed(evt);
+            }
+        });
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/Regresar.jpg"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(jTableVentas, javax.swing.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton1)
+                .addGap(162, 162, 162)
+                .addComponent(btnCargarVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jTableVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnCargarVentas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCargarVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarVentasActionPerformed
+        // TODO add your handling code here:
+          int noPedido = obtenerNoPedidoDesdeOtraClase(); // Reemplaza esto con tu lógica para obtener el número de pedido
+    int cantidadUniformes = obtenerCantidadUniformesDesdeOtraClase(); // Reemplaza esto con tu lógica para obtener la cantidad de uniformes
+
+    // Registrar la venta
+    registrarVenta(noPedido, cantidadUniformes);
+    }//GEN-LAST:event_btnCargarVentasActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void IniciarComponentes() {
+
+        jTableVentas = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        btnCargarVentas = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "NoVenta", "NoPedido", "Fecha", "Total"
+            }
+        ));
+        jTableVentas.setViewportView(jTable1);
+
+        btnCargarVentas.setText("Mostrar Ventas");
+        btnCargarVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCargarVentasActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTableVentas, javax.swing.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(243, 243, 243)
+                .addComponent(btnCargarVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jTableVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnCargarVentas, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold> 
+    
+    private int obtenerNoPedidoDesdeOtraClase() {
+        // Reemplaza esto con tu lógica para obtener el número de pedido
+        return 1;  // Valor de ejemplo
+    }
+
+    private int obtenerCantidadUniformesDesdeOtraClase() {
+        // Reemplaza esto con tu lógica para obtener la cantidad de uniformes
+        return 5;  // Valor de ejemplo
+    }
+
 
     /**
      * @param args the command line arguments
@@ -78,5 +268,9 @@ public class RegistroVentas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCargarVentas;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JScrollPane jTableVentas;
     // End of variables declaration//GEN-END:variables
 }
