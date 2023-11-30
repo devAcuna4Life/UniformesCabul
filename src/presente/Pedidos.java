@@ -42,10 +42,10 @@ public class Pedidos extends javax.swing.JFrame {
 
             while (rs.next()) {
                 data[0] = rs.getString(1);
-                data[1] = rs.getString("Equipo");  // Ajustar al nombre real de la columna en la base de datos
-                data[2] = rs.getString(2);
-                data[3] = rs.getString(3);
-                data[4] = rs.getString(4);
+                data[1] = rs.getString(2);  // Ajustar al nombre real de la columna en la base de datos
+                data[2] = rs.getString(3);
+                data[3] = rs.getString(4);
+                data[4] = rs.getString(5);
                 modelo.addRow(data);
             }
         } catch (SQLException e) {
@@ -54,6 +54,7 @@ public class Pedidos extends javax.swing.JFrame {
     }
 
     public DefaultTableModel obtenerDatosPedidos() {
+
         DefaultTableModel modelo = new DefaultTableModel();
         modelo.addColumn("NoPedido");
         modelo.addColumn("Equipo");  // Nueva columna de tipo VARCHAR
@@ -68,10 +69,10 @@ public class Pedidos extends javax.swing.JFrame {
             while (rs.next()) {
                 Object[] data = {
                     rs.getString(1),
-                    rs.getString("Equipo"), // Ajustar al nombre real de la columna en la base de datos
-                    rs.getString(2),
+                    rs.getString(2), // Ajustar al nombre real de la columna en la base de datos
                     rs.getString(3),
-                    rs.getString(4)
+                    rs.getString(4),
+                    rs.getString(5)
                 };
                 modelo.addRow(data);
             }
@@ -171,6 +172,7 @@ public class Pedidos extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.setComponentPopupMenu(jPopupMenu1);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
@@ -364,9 +366,9 @@ public class Pedidos extends javax.swing.JFrame {
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         // TODO add your handling code here:
         try {
-            PreparedStatement ps = cn.prepareStatement("INSERT INTO pedidos (ModeloUniforme, Equipo, NoUniformes, Precio) VALUES (?,?,?,?)");
-            ps.setString(1, txtModeloUniforme.getText());
-            ps.setString(2, txtEquipo.getText());  // Agregado
+            PreparedStatement ps = cn.prepareStatement("INSERT INTO pedidos (Equipo, ModeloUniforme, NoUniformes, Precio) VALUES (?,?,?,?)");
+            ps.setString(1, txtEquipo.getText());  // Equipo va a la posición 1
+            ps.setString(2, txtModeloUniforme.getText());   // Cadena vacía o null, dependiendo de tu configuración de base de datos, va a la posición 2 (ModeloUniforme)
             ps.setInt(3, Integer.parseInt(txtNoUniformes.getText()));
             ps.setDouble(4, Double.parseDouble(txtPrecio.getText()));
             ps.executeUpdate();
@@ -375,11 +377,11 @@ public class Pedidos extends javax.swing.JFrame {
             mostrarPedidos();
 
             // Limpiar los campos después de la inserción
+            txtEquipo.setText("");
             txtModeloUniforme.setText("");
-            txtEquipo.setText("");  // Agregado
             txtNoUniformes.setText("");
             txtPrecio.setText("");
-        } catch (SQLException e) {
+        } catch (SQLException | NumberFormatException e) {
             JOptionPane.showMessageDialog(rootPane, "Error al registrar pedido" + e);
         }
     }//GEN-LAST:event_btnRegistrarActionPerformed
@@ -390,24 +392,28 @@ public class Pedidos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMostrarActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here:
-        int fila = jTable1.getSelectedRow();
-        this.txtNoPedido.setText(jTable1.getValueAt(fila, 0).toString());
-        this.txtModeloUniforme.setText(jTable1.getValueAt(fila, 1).toString());
-        this.txtEquipo.setText(jTable1.getValueAt(fila, 2).toString());  // Agregado para mostrar el valor de Equipo
+       
+       int fila = jTable1.getSelectedRow();
+        if (fila >= 0) {
+           this.txtNoPedido.setText(jTable1.getValueAt(fila, 0).toString());
+        this.txtEquipo.setText(jTable1.getValueAt(fila, 1).toString());
+        this.txtModeloUniforme.setText(jTable1.getValueAt(fila, 2).toString());
         this.txtNoUniformes.setText(jTable1.getValueAt(fila, 3).toString());
-        this.txtPrecio.setText(jTable1.getValueAt(fila, 4).toString());
+        this.txtPrecio.setText(jTable1.getValueAt(fila, 4).toString());// Ajusta el índice según la posición de Precio en tu tabla
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Selecciona una fila primero.");
+        }
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         // TODO add your handling code here:
         try {
-            PreparedStatement ps = cn.prepareStatement("UPDATE pedidos SET ModeloUniforme=?, Equipo=?, NoUniformes=?, Precio=? WHERE NoPedido=?");
-            ps.setString(1, txtModeloUniforme.getText());
-            ps.setString(2, txtEquipo.getText());  // Agregado para obtener el valor de Equipo
+            PreparedStatement ps = cn.prepareStatement("UPDATE pedidos SET Equipo=?, ModeloUniforme=?, NoUniformes=?, Precio=? WHERE NoPedido=?");
+            ps.setString(1, txtEquipo.getText());  // Cambiado a la posición 1
+            ps.setString(2, txtModeloUniforme.getText());  // Cambiado a la posición 2
             ps.setInt(3, Integer.parseInt(txtNoUniformes.getText()));
             ps.setDouble(4, Double.parseDouble(txtPrecio.getText()));
-            ps.setInt(5, Integer.parseInt(txtNoPedido.getText()));
+            ps.setDouble(5, Integer.parseInt(txtNoPedido.getText()));
 
             int indice = ps.executeUpdate();
 
@@ -416,14 +422,14 @@ public class Pedidos extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(rootPane, "No se seleccionó una fila");
             }
-        } catch (SQLException e) {
+        } catch (SQLException | NumberFormatException e) {
             JOptionPane.showMessageDialog(rootPane, "Error al actualizar datos: " + e);
         }
 
 // Limpiar los campos después de la actualización
         txtNoPedido.setText("");
+        txtEquipo.setText("");
         txtModeloUniforme.setText("");
-        txtEquipo.setText("");  // Agregado para limpiar el campo de Equipo
         txtNoUniformes.setText("");
         txtPrecio.setText("");
         mostrarPedidos();
@@ -436,25 +442,24 @@ public class Pedidos extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
         try {
-            PreparedStatement ps = cn.prepareStatement("DELETE FROM pedidos WHERE NoPedido=?");
-            ps.setInt(1, Integer.parseInt(txtNoPedido.getText()));
-            int indice = ps.executeUpdate();
+    PreparedStatement ps = cn.prepareStatement("DELETE FROM pedidos WHERE NoPedido=?");
+    ps.setInt(1, Integer.parseInt(txtNoPedido.getText()));
+    int indice = ps.executeUpdate();
 
-            if (indice > 0) {
-                mostrarPedidos();
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "No se seleccionó una fila");
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(rootPane, "Error al eliminar datos: " + e);
-        }
-
-// Limpiar los campos después de la eliminación
+    if (indice > 0) {
+        mostrarPedidos();
+        // Limpiar los campos después de la eliminación
         txtNoPedido.setText("");
-        txtEquipo.setText(" ");
+        txtEquipo.setText("");
         txtModeloUniforme.setText("");
         txtNoUniformes.setText("");
         txtPrecio.setText("");
+    } else {
+        JOptionPane.showMessageDialog(rootPane, "No se seleccionó una fila");
+    }
+} catch (SQLException | NumberFormatException e) {
+    JOptionPane.showMessageDialog(rootPane, "Error al eliminar datos: " + e);
+}
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jTable1ComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jTable1ComponentHidden
@@ -463,14 +468,10 @@ public class Pedidos extends javax.swing.JFrame {
 
     private void btnCompletadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompletadoActionPerformed
         // TODO add your handling code here:
-        int noPedidoSeleccionado = obtenerNoPedidoSeleccionado();
+       
+          RegistroVentas home = new RegistroVentas();
+           home.setVisible(true);
 
-        // Completar el pedido en la clase Pedidos
-        if (noPedidoSeleccionado != -1) {
-            completarPedido(noPedidoSeleccionado);
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "Seleccione un pedido antes de completar");
-        }
 
     }//GEN-LAST:event_btnCompletadoActionPerformed
 

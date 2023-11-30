@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 //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
+
 public class InventarioM extends javax.swing.JFrame {
 
     ConexionMys con = new ConexionMys();
@@ -55,6 +56,43 @@ public class InventarioM extends javax.swing.JFrame {
         } catch (SQLException e) {
             System.out.println("Error: " + e);
         }
+    }
+
+    public DefaultTableModel obtenerDatosUniformes() {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("NoUniforme");
+        modelo.addColumn("Equipo");
+        modelo.addColumn("Modelo");
+        modelo.addColumn("Color");
+        modelo.addColumn("Tallas");
+        modelo.addColumn("Jersey");
+        modelo.addColumn("Accesorios");
+        modelo.addColumn("Existencia");
+        modelo.addColumn("Precio");
+
+        try {
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM inventario");
+
+            while (rs.next()) {
+                Object[] data = {
+                    rs.getString("NoUniforme"),
+                    rs.getString("Equipo"),
+                    rs.getString("Modelo"),
+                    rs.getString("Color"),
+                    rs.getString("Tallas"),
+                    rs.getString("Jesrsey"),
+                    rs.getString("Accesorios"),
+                    rs.getString("Existencia"),
+                    rs.getString("Precio")
+                };
+                modelo.addRow(data);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener datos de uniformes: " + e);
+        }
+
+        return modelo;
     }
 
     private void limpiarCampos() {
@@ -482,25 +520,25 @@ public class InventarioM extends javax.swing.JFrame {
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
 
         try {
-    PreparedStatement ps = cn.prepareStatement("INSERT INTO inventario (Equipo, Modelo, Color, Tallas, Jersey, Accesorios, Existencia, Precio) VALUES (?,?,?,?,?,?,?,?)");
-    ps.setString(1, txtEquipo.getText());
-    ps.setString(2, txtModelo.getText());
-    ps.setString(3, txtColor.getText());
-    ps.setString(4, txtTallas.getText());
-    ps.setString(5, txtJersey.getText());
-    ps.setString(6, txtAccesorios.getText());
-    ps.setInt(7, Integer.parseInt(txtExistencia.getText()));
-    ps.setDouble(8, Double.parseDouble(txtPrecio.getText()));
-    ps.executeUpdate();
+            PreparedStatement ps = cn.prepareStatement("INSERT INTO inventario (Equipo, Modelo, Color, Tallas, Jersey, Accesorios, Existencia, Precio) VALUES (?,?,?,?,?,?,?,?)");
+            ps.setString(1, txtEquipo.getText());
+            ps.setString(2, txtModelo.getText());
+            ps.setString(3, txtColor.getText());
+            ps.setString(4, txtTallas.getText());
+            ps.setString(5, txtJersey.getText());
+            ps.setString(6, txtAccesorios.getText());
+            ps.setInt(7, Integer.parseInt(txtExistencia.getText()));
+            ps.setDouble(8, Double.parseDouble(txtPrecio.getText()));
+            ps.executeUpdate();
 
-    JOptionPane.showMessageDialog(rootPane, "Datos guardados correctamente");
-    mostrarDatos();
+            JOptionPane.showMessageDialog(rootPane, "Datos guardados correctamente");
+            mostrarDatos();
 
-    // Limpiar los campos después de la inserción
-    limpiarCampos();
-} catch (SQLException | NumberFormatException e) {
-    JOptionPane.showMessageDialog(rootPane, "Error al registrar datos: " + e);
-}
+            // Limpiar los campos después de la inserción
+            limpiarCampos();
+        } catch (SQLException | NumberFormatException e) {
+            JOptionPane.showMessageDialog(rootPane, "Error al registrar datos: " + e);
+        }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void txtExistenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtExistenciaActionPerformed

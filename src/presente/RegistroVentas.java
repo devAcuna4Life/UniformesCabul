@@ -14,72 +14,45 @@ import javax.swing.table.DefaultTableModel;
  
 public class RegistroVentas extends javax.swing.JFrame {
 
-   int noPedido = obtenerNoPedidoDesdeOtraClase(); // Reemplaza esto con tu lógica para obtener el número de pedido
-int cantidadUniformes = obtenerCantidadUniformesDesdeOtraClase();
+  
 
     ConexionMys con = new ConexionMys();
     Connection cn = con.conectar();
     
-     DefaultTableModel modeloTabla;
+     
     
     public RegistroVentas() {
         initComponents();
-        modeloTabla = (DefaultTableModel) jTable1.getModel();
+       
     }
-    private void cargarVentas() {
-        // Limpiar el contenido de la tabla
-        modeloTabla.setRowCount(0);
+   private void mostrarPedidos() {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("NoPedido");
+        modelo.addColumn("ModeloUniforme");
+        modelo.addColumn("NoUniformes");
+        modelo.addColumn("Precio");
+        jTable1.setModel(modelo);
+        String consultaSql = "SELECT * FROM pedidos";
+        String data[] = new String[4];
 
-        // Consulta SQL para obtener las ventas
-        String consulta = "SELECT NoVenta, NoPedido, Fecha, Total FROM Ventas";
+        Statement st;
 
         try {
-            // Crear una declaración SQL
-            Statement st = cn.createStatement();
+            st = cn.createStatement();
+            ResultSet rs = st.executeQuery(consultaSql);
 
-            // Ejecutar la consulta y obtener el resultado
-            ResultSet rs = st.executeQuery(consulta);
-
-            // Iterar sobre el resultado y agregar filas a la tabla
             while (rs.next()) {
-                Object[] fila = {
-                    rs.getString("NoVenta"),
-                    rs.getString("NoPedido"),
-                    rs.getString("Fecha"),
-                    rs.getString("Total")
-                };
-                modeloTabla.addRow(fila);
+                data[0] = rs.getString(1);
+                data[1] = rs.getString(2);
+                data[2] = rs.getString(3);
+                data[3] = rs.getString(4);
+                modelo.addRow(data);
             }
-
-            // Cerrar recursos
-            rs.close();
-            st.close();
-
         } catch (SQLException e) {
-            // Manejar cualquier error de SQL
-            JOptionPane.showMessageDialog(this, "Error al cargar las ventas: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Error: " + e);
         }
     }
     
-    private void registrarVenta(int noPedido, int cantidadUniformes) {
-        try {
-            // Obtener el precio del uniforme desde la base de datos
-            double precioUnitario = obtenerPrecioUnitario(noPedido);
-
-            // Calcular el total
-            double total = precioUnitario * cantidadUniformes;
-
-            // Insertar la venta en la base de datos
-            PreparedStatement ps = cn.prepareStatement("INSERT INTO ventas (NoPedido, Fecha, Total) VALUES (?, NOW(), ?)");
-            ps.setInt(1, noPedido);
-            ps.setDouble(2, total);
-            ps.executeUpdate();
-
-            JOptionPane.showMessageDialog(rootPane, "Venta registrada correctamente");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(rootPane, "Error al registrar venta: " + e);
-        }
-    }
     
     private double obtenerPrecioUnitario(int noPedido) throws SQLException {
         // Aquí deberías realizar una consulta a la base de datos
@@ -159,11 +132,9 @@ int cantidadUniformes = obtenerCantidadUniformesDesdeOtraClase();
 
     private void btnCargarVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarVentasActionPerformed
         // TODO add your handling code here:
-          int noPedido = obtenerNoPedidoDesdeOtraClase(); // Reemplaza esto con tu lógica para obtener el número de pedido
-    int cantidadUniformes = obtenerCantidadUniformesDesdeOtraClase(); // Reemplaza esto con tu lógica para obtener la cantidad de uniformes
-
-    // Registrar la venta
-    registrarVenta(noPedido, cantidadUniformes);
+           Pedidos pedidos = new Pedidos();
+    DefaultTableModel modelo = pedidos.obtenerDatosPedidos();
+    jTable1.setModel(modelo);
     }//GEN-LAST:event_btnCargarVentasActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -171,65 +142,8 @@ int cantidadUniformes = obtenerCantidadUniformesDesdeOtraClase();
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void IniciarComponentes() {
-
-        jTableVentas = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        btnCargarVentas = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "NoVenta", "NoPedido", "Fecha", "Total"
-            }
-        ));
-        jTableVentas.setViewportView(jTable1);
-
-        btnCargarVentas.setText("Mostrar Ventas");
-        btnCargarVentas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCargarVentasActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTableVentas, javax.swing.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(243, 243, 243)
-                .addComponent(btnCargarVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jTableVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnCargarVentas, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        pack();
-    }// </editor-fold> 
     
-    private int obtenerNoPedidoDesdeOtraClase() {
-        // Reemplaza esto con tu lógica para obtener el número de pedido
-        return 1;  // Valor de ejemplo
-    }
 
-    private int obtenerCantidadUniformesDesdeOtraClase() {
-        // Reemplaza esto con tu lógica para obtener la cantidad de uniformes
-        return 5;  // Valor de ejemplo
-    }
 
 
     /**
