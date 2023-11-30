@@ -221,13 +221,14 @@ public class Menu extends javax.swing.JFrame {
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         // TODO add your handling code here:
-        MostrarUni home = new MostrarUni();
+      /*  MostrarUni home = new MostrarUni();
            home.setVisible(true);
+        */
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
-        InventarioUni home = new InventarioUni();
+        InventarioM home = new InventarioM();
            home.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 

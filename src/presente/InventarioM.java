@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
-
+//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
 public class InventarioM extends javax.swing.JFrame {
 
     ConexionMys con = new ConexionMys();

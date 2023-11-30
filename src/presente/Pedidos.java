@@ -23,90 +23,90 @@ public class Pedidos extends javax.swing.JFrame {
     }
 
     private void mostrarPedidos() {
-    DefaultTableModel modelo = new DefaultTableModel();
-    modelo.addColumn("NoPedido");
-    modelo.addColumn("Uniformes");  // Nueva columna de tipo VARCHAR, ahora después de "NoPedido"
-    modelo.addColumn("ModeloUniforme");
-    modelo.addColumn("NoUniformes");
-    modelo.addColumn("Precio");
-    jTable1.setModel(modelo);
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("NoPedido");
+        modelo.addColumn("Equipo");  // Nueva columna de tipo VARCHAR, ahora después de "NoPedido"
+        modelo.addColumn("ModeloUniforme");
+        modelo.addColumn("NoUniformes");
+        modelo.addColumn("Precio");
+        jTable1.setModel(modelo);
 
-    String consultaSql = "SELECT * FROM pedidos";
-    String data[] = new String[5];  // Ajustar el tamaño del array al número de columnas
+        String consultaSql = "SELECT * FROM pedidos";
+        String data[] = new String[5];  // Ajustar el tamaño del array al número de columnas
 
-    Statement st;
+        Statement st;
 
-    try {
-        st = cn.createStatement();
-        ResultSet rs = st.executeQuery(consultaSql);
+        try {
+            st = cn.createStatement();
+            ResultSet rs = st.executeQuery(consultaSql);
 
-        while (rs.next()) {
-            data[0] = rs.getString(1);
-            data[1] = rs.getString("Uniformes");  // Ajustar al nombre real de la columna en la base de datos
-            data[2] = rs.getString(2);
-            data[3] = rs.getString(3);
-            data[4] = rs.getString(4);
-            modelo.addRow(data);
+            while (rs.next()) {
+                data[0] = rs.getString(1);
+                data[1] = rs.getString("Equipo");  // Ajustar al nombre real de la columna en la base de datos
+                data[2] = rs.getString(2);
+                data[3] = rs.getString(3);
+                data[4] = rs.getString(4);
+                modelo.addRow(data);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e);
         }
-    } catch (SQLException e) {
-        System.out.println("Error: " + e);
-    }
-}
-
-   public DefaultTableModel obtenerDatosPedidos() {
-    DefaultTableModel modelo = new DefaultTableModel();
-    modelo.addColumn("NoPedido");
-    modelo.addColumn("Uniformes");  // Nueva columna de tipo VARCHAR
-    modelo.addColumn("ModeloUniforme");
-    modelo.addColumn("NoUniformes");
-    modelo.addColumn("Precio");
-
-    try {
-        Statement st = cn.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM pedidos");
-
-        while (rs.next()) {
-            Object[] data = {
-                rs.getString(1),
-                rs.getString("Uniformes"),  // Ajustar al nombre real de la columna en la base de datos
-                rs.getString(2),
-                rs.getString(3),
-                rs.getString(4)
-            };
-            modelo.addRow(data);
-        }
-    } catch (SQLException e) {
-        System.out.println("Error al obtener datos de pedidos: " + e);
     }
 
-    return modelo;
-}
+    public DefaultTableModel obtenerDatosPedidos() {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("NoPedido");
+        modelo.addColumn("Equipo");  // Nueva columna de tipo VARCHAR
+        modelo.addColumn("ModeloUniforme");
+        modelo.addColumn("NoUniformes");
+        modelo.addColumn("Precio");
+
+        try {
+            Statement st = cn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM pedidos");
+
+            while (rs.next()) {
+                Object[] data = {
+                    rs.getString(1),
+                    rs.getString("Equipo"), // Ajustar al nombre real de la columna en la base de datos
+                    rs.getString(2),
+                    rs.getString(3),
+                    rs.getString(4)
+                };
+                modelo.addRow(data);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener datos de pedidos: " + e);
+        }
+
+        return modelo;
+    }
 
     public void completarPedido(int noPedido) {
-    try {
-        PreparedStatement ps = cn.prepareStatement("UPDATE pedidos SET Total = NoUniformes * Precio, Completado = 1 WHERE NoPedido=?");
-        ps.setInt(1, noPedido);
-        int indice = ps.executeUpdate();
+        try {
+            PreparedStatement ps = cn.prepareStatement("UPDATE pedidos SET Total = NoUniformes * Precio, Completado = 1 WHERE NoPedido=?");
+            ps.setInt(1, noPedido);
+            int indice = ps.executeUpdate();
 
-        if (indice > 0) {
-            System.out.println("Pedido completado con éxito");
-        } else {
-            System.out.println("No se encontró un pedido con ese número");
+            if (indice > 0) {
+                System.out.println("Pedido completado con éxito");
+            } else {
+                System.out.println("No se encontró un pedido con ese número");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al completar el pedido: " + e);
         }
-    } catch (SQLException e) {
-        System.out.println("Error al completar el pedido: " + e);
     }
-}
-    
+
     private int obtenerNoPedidoSeleccionado() {
-    int filaSeleccionada = jTable1.getSelectedRow();
-    if (filaSeleccionada != -1) {
-        return Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 0).toString());
-    } else {
-        return -1;
+        int filaSeleccionada = jTable1.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            return Integer.parseInt(jTable1.getValueAt(filaSeleccionada, 0).toString());
+        } else {
+            return -1;
+        }
     }
-}
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -363,25 +363,25 @@ public class Pedidos extends javax.swing.JFrame {
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         // TODO add your handling code here:
-      try {
-    PreparedStatement ps = cn.prepareStatement("INSERT INTO pedidos (ModeloUniforme, Equipo, NoUniformes, Precio) VALUES (?,?,?,?)");
-    ps.setString(1, txtModeloUniforme.getText());
-    ps.setString(2, txtEquipo.getText());  // Agregado
-    ps.setInt(3, Integer.parseInt(txtNoUniformes.getText()));
-    ps.setDouble(4, Double.parseDouble(txtPrecio.getText()));
-    ps.executeUpdate();
+        try {
+            PreparedStatement ps = cn.prepareStatement("INSERT INTO pedidos (ModeloUniforme, Equipo, NoUniformes, Precio) VALUES (?,?,?,?)");
+            ps.setString(1, txtModeloUniforme.getText());
+            ps.setString(2, txtEquipo.getText());  // Agregado
+            ps.setInt(3, Integer.parseInt(txtNoUniformes.getText()));
+            ps.setDouble(4, Double.parseDouble(txtPrecio.getText()));
+            ps.executeUpdate();
 
-    JOptionPane.showMessageDialog(rootPane, "Datos guardados correctamente");
-    mostrarPedidos();
+            JOptionPane.showMessageDialog(rootPane, "Datos guardados correctamente");
+            mostrarPedidos();
 
-    // Limpiar los campos después de la inserción
-    txtModeloUniforme.setText("");
-    txtEquipo.setText("");  // Agregado
-    txtNoUniformes.setText("");
-    txtPrecio.setText("");
-} catch (SQLException e) {
-    JOptionPane.showMessageDialog(rootPane, "Error al registrar pedido" + e);
-}
+            // Limpiar los campos después de la inserción
+            txtModeloUniforme.setText("");
+            txtEquipo.setText("");  // Agregado
+            txtNoUniformes.setText("");
+            txtPrecio.setText("");
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(rootPane, "Error al registrar pedido" + e);
+        }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void btnMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarActionPerformed
@@ -394,18 +394,20 @@ public class Pedidos extends javax.swing.JFrame {
         int fila = jTable1.getSelectedRow();
         this.txtNoPedido.setText(jTable1.getValueAt(fila, 0).toString());
         this.txtModeloUniforme.setText(jTable1.getValueAt(fila, 1).toString());
-        this.txtNoUniformes.setText(jTable1.getValueAt(fila, 2).toString());
-        this.txtPrecio.setText(jTable1.getValueAt(fila, 3).toString());
+        this.txtEquipo.setText(jTable1.getValueAt(fila, 2).toString());  // Agregado para mostrar el valor de Equipo
+        this.txtNoUniformes.setText(jTable1.getValueAt(fila, 3).toString());
+        this.txtPrecio.setText(jTable1.getValueAt(fila, 4).toString());
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         // TODO add your handling code here:
         try {
-            PreparedStatement ps = cn.prepareStatement("UPDATE pedidos SET ModeloUniforme=?, NoUniformes=?, Precio=? WHERE NoPedido=?");
+            PreparedStatement ps = cn.prepareStatement("UPDATE pedidos SET ModeloUniforme=?, Equipo=?, NoUniformes=?, Precio=? WHERE NoPedido=?");
             ps.setString(1, txtModeloUniforme.getText());
-            ps.setInt(2, Integer.parseInt(txtNoUniformes.getText()));
-            ps.setDouble(3, Double.parseDouble(txtPrecio.getText()));
-            ps.setInt(4, Integer.parseInt(txtNoPedido.getText()));
+            ps.setString(2, txtEquipo.getText());  // Agregado para obtener el valor de Equipo
+            ps.setInt(3, Integer.parseInt(txtNoUniformes.getText()));
+            ps.setDouble(4, Double.parseDouble(txtPrecio.getText()));
+            ps.setInt(5, Integer.parseInt(txtNoPedido.getText()));
 
             int indice = ps.executeUpdate();
 
@@ -421,6 +423,7 @@ public class Pedidos extends javax.swing.JFrame {
 // Limpiar los campos después de la actualización
         txtNoPedido.setText("");
         txtModeloUniforme.setText("");
+        txtEquipo.setText("");  // Agregado para limpiar el campo de Equipo
         txtNoUniformes.setText("");
         txtPrecio.setText("");
         mostrarPedidos();
@@ -448,6 +451,7 @@ public class Pedidos extends javax.swing.JFrame {
 
 // Limpiar los campos después de la eliminación
         txtNoPedido.setText("");
+        txtEquipo.setText(" ");
         txtModeloUniforme.setText("");
         txtNoUniformes.setText("");
         txtPrecio.setText("");
@@ -461,12 +465,12 @@ public class Pedidos extends javax.swing.JFrame {
         // TODO add your handling code here:
         int noPedidoSeleccionado = obtenerNoPedidoSeleccionado();
 
-    // Completar el pedido en la clase Pedidos
-    if (noPedidoSeleccionado != -1) {
-        completarPedido(noPedidoSeleccionado);
-    } else {
-        JOptionPane.showMessageDialog(rootPane, "Seleccione un pedido antes de completar");
-    }
+        // Completar el pedido en la clase Pedidos
+        if (noPedidoSeleccionado != -1) {
+            completarPedido(noPedidoSeleccionado);
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Seleccione un pedido antes de completar");
+        }
 
     }//GEN-LAST:event_btnCompletadoActionPerformed
 
