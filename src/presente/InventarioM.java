@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
-//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
+//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
 
 public class InventarioM extends javax.swing.JFrame {
 
@@ -81,7 +81,7 @@ public class InventarioM extends javax.swing.JFrame {
                     rs.getString("Modelo"),
                     rs.getString("Color"),
                     rs.getString("Tallas"),
-                    rs.getString("Jesrsey"),
+                    rs.getString("Jersey"),
                     rs.getString("Accesorios"),
                     rs.getString("Existencia"),
                     rs.getString("Precio")
@@ -98,7 +98,7 @@ public class InventarioM extends javax.swing.JFrame {
     private void limpiarCampos() {
         txtNoUniforme.setText("");
         txtEquipo.setText("");
-        txtModelo.setText(""); // Agrega los campos de "Modelo", "Color" y "Tallas" según corresponda
+        txtModelo.setText("");
         txtColor.setText("");
         txtTallas.setText("");
         txtJersey.setText("");
@@ -470,13 +470,13 @@ public class InventarioM extends javax.swing.JFrame {
         if (fila >= 0) {
             this.txtNoUniforme.setText(jTable1.getValueAt(fila, 0).toString());
             this.txtEquipo.setText(jTable1.getValueAt(fila, 1).toString());
-            this.txtModelo.setText(jTable1.getValueAt(fila, 2).toString()); // Ajusta el índice según la posición de Modelo en tu tabla
-            this.txtColor.setText(jTable1.getValueAt(fila, 3).toString());  // Ajusta el índice según la posición de Color en tu tabla
-            this.txtTallas.setText(jTable1.getValueAt(fila, 4).toString()); // Ajusta el índice según la posición de Tallas en tu tabla
+            this.txtModelo.setText(jTable1.getValueAt(fila, 2).toString()); 
+            this.txtColor.setText(jTable1.getValueAt(fila, 3).toString());  
+            this.txtTallas.setText(jTable1.getValueAt(fila, 4).toString()); 
             this.txtJersey.setText(jTable1.getValueAt(fila, 5).toString());
-            this.txtAccesorios.setText(jTable1.getValueAt(fila, 6).toString()); // Ajusta el índice según la posición de Accesorios en tu tabla
+            this.txtAccesorios.setText(jTable1.getValueAt(fila, 6).toString());
             this.txtExistencia.setText(jTable1.getValueAt(fila, 7).toString());
-            this.txtPrecio.setText(jTable1.getValueAt(fila, 8).toString()); // Ajusta el índice según la posición de Precio en tu tabla
+            this.txtPrecio.setText(jTable1.getValueAt(fila, 8).toString());
         } else {
             JOptionPane.showMessageDialog(rootPane, "Selecciona una fila primero.");
         }
