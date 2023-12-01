@@ -23,8 +23,15 @@ public class RegistroVentas extends javax.swing.JFrame {
     
     public RegistroVentas() {
         initComponents();
+        mostrarPedidos();
        
     }
+    
+    public void agregarRegistro(String noPedido, String modeloUniforme, String noUniformes, String precio) {
+    DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+    Object[] data = {noPedido, modeloUniforme, noUniformes, precio};
+    modelo.addRow(data);
+}
    private void mostrarPedidos() {
         DefaultTableModel modelo = new DefaultTableModel();
         modelo.addColumn("NoPedido");
@@ -55,9 +62,7 @@ public class RegistroVentas extends javax.swing.JFrame {
     
     
     private double obtenerPrecioUnitario(int noPedido) throws SQLException {
-        // Aquí deberías realizar una consulta a la base de datos
-        // para obtener el precio unitario del uniforme asociado al pedido.
-        // Por ahora, devolveré un valor constante para demostración.
+        
         return 50.0;  // Este valor debe ser reemplazado con la consulta real.
     }
 
@@ -72,8 +77,8 @@ public class RegistroVentas extends javax.swing.JFrame {
 
         jTableVentas = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        btnCargarVentas = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -90,13 +95,6 @@ public class RegistroVentas extends javax.swing.JFrame {
         ));
         jTableVentas.setViewportView(jTable1);
 
-        btnCargarVentas.setText("Mostrar Ventas");
-        btnCargarVentas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCargarVentasActionPerformed(evt);
-            }
-        });
-
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/Regresar.jpg"))); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -104,38 +102,41 @@ public class RegistroVentas extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel1.setText("°Registro De Las Ventas°");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTableVentas, javax.swing.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1)
-                .addGap(162, 162, 162)
-                .addComponent(btnCargarVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(277, 277, 277)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(jTableVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 793, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTableVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(14, 14, 14)
+                .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnCargarVentas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jTableVentas, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnCargarVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarVentasActionPerformed
-        // TODO add your handling code here:
-           Pedidos pedidos = new Pedidos();
-    DefaultTableModel modelo = pedidos.obtenerDatosPedidos();
-    jTable1.setModel(modelo);
-    }//GEN-LAST:event_btnCargarVentasActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
@@ -171,9 +172,9 @@ public class RegistroVentas extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(RegistroVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+      
 
-        /* Create and display the form */
+       
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new RegistroVentas().setVisible(true);
@@ -182,8 +183,8 @@ public class RegistroVentas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCargarVentas;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JTable jTable1;
     private javax.swing.JScrollPane jTableVentas;
     // End of variables declaration//GEN-END:variables

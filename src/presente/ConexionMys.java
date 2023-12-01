@@ -32,8 +32,7 @@ public class ConexionMys {
         
         try {
             cn=DriverManager.getConnection (host+bd, user, pass);
-            JOptionPane.showMessageDialog(null, "Conexion exitosa");
-            System.out.println("conexion exitosa");
+            
           } 
         catch(SQLException ex){
                            
