@@ -11,60 +11,87 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
- 
-public class RegistroVentas extends javax.swing.JFrame {
+import java.sql.Date;
 
-  
+public class RegistroVentas extends javax.swing.JFrame {
 
     ConexionMys con = new ConexionMys();
     Connection cn = con.conectar();
-    
-     
-    
+
+    private DefaultTableModel modelo;
+
     public RegistroVentas() {
         initComponents();
-        mostrarPedidos();
-       
+        mostrarRegistros();
+        
+
     }
-    
-    public void agregarRegistro(String noPedido, String modeloUniforme, String noUniformes, String precio) {
-    DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-    Object[] data = {noPedido, modeloUniforme, noUniformes, precio};
-    modelo.addRow(data);
-}
-   private void mostrarPedidos() {
+
+    public void mostrarRegistros() {
         DefaultTableModel modelo = new DefaultTableModel();
+
+        // Se añaden las columnas al modelo
         modelo.addColumn("NoPedido");
+        modelo.addColumn("Equipo");
         modelo.addColumn("ModeloUniforme");
         modelo.addColumn("NoUniformes");
         modelo.addColumn("Precio");
-        jTable1.setModel(modelo);
-        String consultaSql = "SELECT * FROM pedidos";
-        String data[] = new String[4];
+        modelo.addColumn("Fecha");
 
+        // Se establece el modelo en la tabla jTable1
+        jTable1.setModel(modelo);
+
+        // Consulta SQL para obtener los registros de ventas
+        String consultaSql = "SELECT * FROM ventas";
+
+        // Arreglo para almacenar los datos de cada fila
+        String data[] = new String[6];
+
+        // Declaración de la declaración de SQL
         Statement st;
 
         try {
+            // Se crea la declaración SQL
             st = cn.createStatement();
+
+            // Se ejecuta la consulta
             ResultSet rs = st.executeQuery(consultaSql);
 
+            // Se recorre el conjunto de resultados
             while (rs.next()) {
+                // Se obtienen los valores de las columnas
                 data[0] = rs.getString(1);
                 data[1] = rs.getString(2);
                 data[2] = rs.getString(3);
                 data[3] = rs.getString(4);
+                data[4] = rs.getString(5);
+                data[5] = rs.getString(6);
+
+                // Se agrega la fila al modelo de la tabla
                 modelo.addRow(data);
             }
         } catch (SQLException e) {
+            // Se imprime un mensaje de error en caso de una excepción SQL
             System.out.println("Error: " + e);
         }
     }
-    
-    
-    private double obtenerPrecioUnitario(int noPedido) throws SQLException {
-        
-        return 50.0;  // Este valor debe ser reemplazado con la consulta real.
+
+    public void agregarRegistro(String noPedido, String equipo, String modeloUniforme, String noUniformes, String precio, Date fecha) {
+    try {
+        // Agregar el registro al historial con la fecha
+        PreparedStatement ps = cn.prepareStatement("INSERT INTO ventas (NoPedido, Equipo, ModeloUniforme, NoUniformes, Precio, Fecha) VALUES (?, ?, ?, ?, ?, ?)");
+        ps.setInt(1, Integer.parseInt(noPedido));
+        ps.setString(2, equipo);
+        ps.setString(3, modeloUniforme);
+        ps.setInt(4, Integer.parseInt(noUniformes));
+        ps.setDouble(5, Double.parseDouble(precio));
+        ps.setDate(6, new java.sql.Date(fecha.getTime())); // Convertir Date a java.sql.Date
+
+        ps.executeUpdate();
+    } catch (SQLException | NumberFormatException e) {
+        JOptionPane.showMessageDialog(rootPane, "Error al agregar registro a historial: " + e);
     }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -79,6 +106,8 @@ public class RegistroVentas extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        btnMostrarVentas = new javax.swing.JButton();
+        txtMostrarVentas = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -106,6 +135,13 @@ public class RegistroVentas extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(102, 102, 102));
         jLabel1.setText("°Registro De Las Ventas°");
 
+        btnMostrarVentas.setText("Efectivo total por ventas:");
+        btnMostrarVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMostrarVentasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -114,14 +150,18 @@ public class RegistroVentas extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jButton1))
+                        .addComponent(jButton1)
+                        .addGap(250, 250, 250)
+                        .addComponent(btnMostrarVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtMostrarVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(277, 277, 277)
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(16, 16, 16)
                         .addComponent(jTableVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 793, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,7 +171,10 @@ public class RegistroVentas extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jTableVentas, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnMostrarVentas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtMostrarVentas))
                 .addContainerGap())
         );
 
@@ -143,9 +186,26 @@ public class RegistroVentas extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    
+    public double calcularTotalVentas() {
+    double total = 0.0;
 
+    // Recorre las filas de la tabla
+    for (int i = 0; i < jTable1.getRowCount(); i++) {
+        // Obtiene el valor de la columna "Precio" en la fila actual
+        String precioStr = jTable1.getValueAt(i, 4).toString();
+        
+        // Convierte el valor a double y suma al total
+        total += Double.parseDouble(precioStr);
+    }
 
+    return total;
+}
+    private void btnMostrarVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarVentasActionPerformed
+        // TODO add your handling code here:
+         double totalVentas = calcularTotalVentas();
+    txtMostrarVentas.setText(String.valueOf(totalVentas));
+
+    }//GEN-LAST:event_btnMostrarVentasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -172,9 +232,7 @@ public class RegistroVentas extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(RegistroVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-      
 
-       
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new RegistroVentas().setVisible(true);
@@ -183,9 +241,11 @@ public class RegistroVentas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnMostrarVentas;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTable jTable1;
     private javax.swing.JScrollPane jTableVentas;
+    private javax.swing.JTextField txtMostrarVentas;
     // End of variables declaration//GEN-END:variables
 }

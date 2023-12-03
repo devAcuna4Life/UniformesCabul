@@ -28,6 +28,10 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="250" max="-2" attributes="0"/>
+                      <Component id="btnMostrarVentas" min="-2" pref="173" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="txtMostrarVentas" min="-2" pref="199" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="277" max="-2" attributes="0"/>
@@ -38,7 +42,7 @@
                       <Component id="jTableVentas" min="-2" pref="793" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="25" max="32767" attributes="0"/>
+              <EmptySpace pref="87" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -50,7 +54,11 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jTableVentas" pref="339" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="jButton1" max="32767" attributes="0"/>
+                  <Component id="btnMostrarVentas" max="32767" attributes="0"/>
+                  <Component id="txtMostrarVentas" max="32767" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -95,6 +103,16 @@
         </Property>
         <Property name="text" type="java.lang.String" value="&#xb0;Registro De Las Ventas&#xb0;"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnMostrarVentas">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Efectivo total por ventas:"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMostrarVentasActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtMostrarVentas">
     </Component>
   </SubComponents>
 </Form>

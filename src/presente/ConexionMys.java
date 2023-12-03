@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * @author Jonathan
  */
 public class ConexionMys {
-    
+    /*
     Connection cn;
     
     public Connection conectar()  {
@@ -44,6 +44,36 @@ public class ConexionMys {
         return cn;
      }      
     
-    
+    */
+    private Connection cn;
+
+    public Connection conectar() {
+
+        String host = "jdbc:mysql://localhost/";
+        String user = "root";
+        String pass = ""; // Deja la contraseña en blanco si no has establecido una
+        String bd = "mysql"; // Replace with the real name of your database
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            cn = DriverManager.getConnection(host + bd, user, pass);
+            System.out.println("Conexión exitosa a la base de datos " + bd);
+        } catch (ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al conectar a la base de datos: " + ex.getMessage());
+            System.out.println("Error al conectar a la base de datos: " + ex.getCause());
+        }
+
+        return cn;
+    }
+
+    public void cerrar() {
+        try {
+            if (cn != null) {
+                cn.close();
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al cerrar la conexión a la base de datos: " + ex.getMessage());
+        }
+    }
     
 }
